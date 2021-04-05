@@ -1,0 +1,563 @@
+using System;
+/*program to collect user input for selected products
+ * Sarthak Patel
+ * Date: April 3 2021
+ */
+
+namespace Assignment_1
+{
+    public struct ElectronicsItem
+    {
+        public string name;
+        public string subType;
+        public string colorType;
+        public double price;
+    }
+
+    public struct customeritem
+    {
+        public string name;
+        public string subType;
+        public string colorType;
+        public int    quantity;
+        public double discount;
+        public double singlePrice;
+        public double totalPrice;
+        public double discountedPrice;
+    }
+
+    class Program
+    {
+        static void Welcome()
+        {
+            //welcome message for the user
+            Console.WriteLine("\n=> Welcome to The Super Store!!\n\n");
+        }
+        static void AvailableProduct()
+        {
+            //available product list 
+            Console.WriteLine("We have following products available:\n");
+            Console.WriteLine("{0,-15}{1,15}", "Product list", "Price");
+            Console.WriteLine("{0,-15}{1,15}", "------------", "-----");
+            Console.WriteLine("{0,-15}{1,15}", "iPhone-grey",     "$1599");
+            Console.WriteLine("{0,-15}{1,15}", "iPhone-red",      "$1549");
+            Console.WriteLine("{0,-15}{1,15}", "pixel-white",     "$799");
+            Console.WriteLine("{0,-15}{1,15}", "pixel-black",     "$749");
+            Console.WriteLine("{0,-15}{1,15}", "samsung-grey",    "$1099");
+            Console.WriteLine("{0,-15}{1,15}", "samsung-red",      "$1049");
+            Console.WriteLine("{0,-15}{1,15}", "iPad-white",       "$1199");
+            Console.WriteLine("{0,-15}{1,15}", "iPad-black",       "$1149");
+            Console.WriteLine("{0,-15}{1,15}", "Boss-grey",        "$249");
+            Console.WriteLine("{0,-15}{1,15}", "Boss-red",         "$255");
+            Console.WriteLine("{0,-15}{1,15}", "samsung-white",    "$340");
+            Console.WriteLine("{0,-15}{1,15}", "samsung-black",    "$370");
+            Console.WriteLine("{0,-15}{1,15}", "Toshiba-grey",     "$2240");
+            Console.WriteLine("{0,-15}{1,15}", "Toshiba-red",      "$2340");
+            Console.WriteLine("{0,-15}{1,15}", "Appletv-white",    "$2780");
+            Console.WriteLine("{0,-15}{1,15}", "Appletv-black",    "$2710");
+            Console.WriteLine("{0,-15}{1,15}", "Skullcandy-grey",  "$80");
+            Console.WriteLine("{0,-15}{1,15}", "Skullcandy-red",   "$85");
+            Console.WriteLine("{0,-15}{1,15}", "Beats-white",      "$170");
+            Console.WriteLine("{0,-15}{1,15}", "Beats-black",      "$190");
+            Console.WriteLine("{0,-15}{1,15}", "Airpord-grey",     "$350");
+            Console.WriteLine("{0,-15}{1,15}", "Airpord-red",      "$310");
+            Console.WriteLine("{0,-15}{1,15}", "Skullcandy-white", "$250");
+            Console.WriteLine("{0,-15}{1,15}", "Skullcandy-black", "$270");
+        }
+
+        // if user input any lowercase and upper case so it will be matche by this function
+        static Boolean isStringEqual(string stringA, string stringB) 
+        {
+            return string.Equals(stringA, stringB, StringComparison.OrdinalIgnoreCase);
+        }
+
+        static int isProductAvailable(ElectronicsItem[] product, string answer)   //this function check that if the user input products available or not
+        {
+            for (int i = 0; i < product.Length; i++)
+            {
+                if (isStringEqual(product[i].name, answer))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        static bool isSubTypeAvailable(ElectronicsItem[] product, string answer)
+        {
+            for (int i = 0; i < product.Length; i++)
+            {
+                if (isStringEqual(product[i].subType, answer))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        static bool isColorAvailable(ElectronicsItem[] product, string answer)
+        {
+            for (int i = 0; i < product.Length; i++)
+            {
+                if (isStringEqual(product[i].colorType, answer))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        static string AskProductType(ElectronicsItem[] product) //this function used for productType 
+        {
+            string Type;
+            Boolean incorrect = false;
+            int productIndex;
+
+            do
+            {
+                // ask a question 1
+                Console.WriteLine("\n=> Which product you want to buy from following list\n Phone, Tablet, Speaker, Tv, Headphone, Bluetooth ?");
+                Type = Console.ReadLine().Trim(' ');
+
+                productIndex = isProductAvailable(product, Type);
+
+                // check the product is correct or not and show output
+                if (productIndex != -1)
+                {
+                    Console.WriteLine("\n=> You selected " + product[productIndex].name);
+                    incorrect = false;      
+                }
+                else
+                {
+                    Console.WriteLine("\n=> Sorry this " + Type + " not available in our inventory!");
+                    incorrect = true;
+                }
+
+            } while (incorrect == true);     //if the answer is invalid then ask same question again
+
+            return product[productIndex].name;
+        }
+
+        static void printSubType(ElectronicsItem[] product, string productType)
+        {
+            string temp = "";
+            for (int i = 0; i < product.Length; i++)
+            {
+                if ((isStringEqual(product[i].name , productType)) &&
+                    ((!isStringEqual(temp, product[i].subType))))
+                {
+                    Console.WriteLine(product[i].subType + ", ");
+                    temp = product[i].subType;
+                }
+            }
+        }
+
+        //this function used for subType
+        static string AskSubType(ElectronicsItem[] product, string productType)
+        {
+            string subType;
+            Boolean incorrect = false;
+
+            do
+            {
+                // ask a question 2
+                Console.WriteLine("\n=> please select product type from following: \n");
+                printSubType(product, productType);
+                subType = Console.ReadLine().Trim(' ');
+
+
+                // check the iPhone name is correct or not
+                if (isSubTypeAvailable(product, subType))
+                {
+                    Console.WriteLine("\n=> You selected " + subType);
+                    incorrect = false;
+                }
+                else
+                {
+                    Console.WriteLine("\n=> Sorry this " + subType + " not available in our inventory!");
+                    incorrect = true;
+                }
+
+            } while (incorrect == true);     //if the answer is invalid then ask same question again
+            return subType;
+        }
+        //this function used for show the user that which color product he/she chosed
+        static void printColorType(ElectronicsItem[] product, string productType, string productSubType)
+        {
+            string tempColor = "";
+            for (int i = 0; i < product.Length; i++)
+            {
+                if ((isStringEqual(product[i].name , productType)) &&
+                    (isStringEqual(product[i].subType , productSubType) &&
+                    (!isStringEqual(tempColor , product[i].colorType))))
+                {
+                    Console.WriteLine(product[i].colorType + ", ");
+                    tempColor = product[i].colorType;
+                }
+            }
+        }
+        //this function used for ask the user that which color product he/she want
+        static string AskcolorType(ElectronicsItem[] product, string productType, string productSubType)
+        {
+            string colorType;
+            Boolean incorrect = false;
+
+            do
+            {
+                // ask a question 2
+                Console.WriteLine("\n=> please select color for your product!");
+                printColorType(product, productType, productSubType);
+                colorType = Console.ReadLine().Trim(' ');
+
+
+                // check the iPhone name is correct or not
+                if (isColorAvailable(product, colorType))
+                {
+                    Console.WriteLine("\n=> You selected " + colorType);
+                    incorrect = false;
+
+                }
+                else
+                {
+                    Console.WriteLine("\n=> Sorry this " + colorType + " not available in our inventory!");
+                    incorrect = true;
+                }
+
+            } while (incorrect == true);     //if the answer is invalid then ask same question again
+            return colorType;
+        }
+        //this function used for ask the user that how many quantity of the product he/she want
+        static int askQuantity(int previousQuantity, string ColorType, string productSubType, string productType)
+        {
+            
+                int maxQuantityPerItem = 10;
+                //int minQuantityPerItem = 0;
+
+                int quantitySelection;
+                bool incorrect = false;
+            do
+            {
+                Console.WriteLine("\n=> How many " + ColorType + " " + productSubType + " " + productType + " you want?");
+                try
+                {
+                    quantitySelection = previousQuantity + int.Parse(Console.ReadLine().Trim(' '));
+                }
+                catch 
+                {
+                    quantitySelection = 100;
+                }
+
+                if (quantitySelection <= maxQuantityPerItem)
+                {
+                    
+                    Console.WriteLine("\n=> Total quantity of product is " + quantitySelection);
+                    incorrect = false;
+                    
+                }
+                else
+                {
+                    Console.WriteLine("\n=> Invalid Input! You can only order maximumum " + maxQuantityPerItem + " piece per product");   //if the answer is invalid then ask same question again
+                    incorrect = true;
+                }
+            } while (incorrect == true);
+          
+            return quantitySelection;
+        }
+        //this function used for asking the user that he/she in any of the category so he.she will be get discount
+        static double addCategoryDiscount()
+        {
+            string category;
+            double discount = 0;
+            bool incorrect = false;
+            do
+            {
+                // ask user about student or senior citizen 
+                Console.WriteLine("\n=> Please select in yes or no if you are any of the following category student or senior citizen or both ? [yes/no]");
+                category = Console.ReadLine().Trim(' ');
+                incorrect = true;
+
+                // check the category is correct or not
+                if (isStringEqual(category , "yes"))
+                {
+                    incorrect = false;
+                    discount = 7;
+                }
+
+                if (isStringEqual(category , "no"))
+                {
+                    incorrect = false;
+                }
+
+                if ((!isStringEqual(category , "yes")) && 
+                    (!isStringEqual(category , "no")))
+                {
+                    Console.WriteLine("\n=> Sorry your answer is invalid, Please enter again!!");
+                }
+            } while (incorrect == true);    //if the answer is invalid then ask same question again
+            
+            return discount;
+        }
+        //this function used for the quantity discount because the discount are various
+        static double disItem( int quantitySelection)
+        {
+            double discount = 0;
+
+            if (quantitySelection < 5)
+            {
+                discount = addCategoryDiscount();
+            }
+            if (quantitySelection > 5 && quantitySelection <= 10)
+            {
+                discount = 30;
+            }
+            if (discount > 0)
+            {
+                Console.WriteLine("\n=> Congrates you get " + discount+ "% discount on your purchase !");
+            }
+            return discount;
+        }
+        //if the user wants to checkout or not
+        static Boolean isCheckoutSelected()
+        {
+            string ans;
+            bool incorrect = false, checkout = false;
+
+            do
+            {
+                //ask user for checkout
+                Console.WriteLine("\n=> You want to check out ?[yes/no]");
+                ans = Console.ReadLine().Trim(' ');
+                incorrect = true;
+
+                if (isStringEqual(ans , "yes"))
+                {
+                    Console.WriteLine("\n=> Thank you for respone ");
+                    incorrect = false;
+                    checkout = true;
+                }
+                if (isStringEqual(ans , "no"))
+                {
+                    incorrect = false;
+                    checkout = false;
+                }
+
+                if ((!isStringEqual(ans , "yes")) &&
+                    (!isStringEqual(ans , "no")))
+                {
+                    Console.WriteLine("\n=> Sorry your answer is invalid, Please enter again!!");
+                }
+            } while (incorrect == true);    //if the answer is invalid then ask same question again
+            return checkout;
+        }
+        //this function used for the getproductpriec from product name,type and color which is already stored in the array of product
+        static double getProductPrice(ElectronicsItem[] product, customeritem PurchaseProduct)
+        {
+            for (int i = 0; i < product.Length; i++)
+            {
+                if ((isStringEqual(product[i].name , PurchaseProduct.name)) && (isStringEqual(product[i].subType , PurchaseProduct.subType)) && (isStringEqual(product[i].colorType , PurchaseProduct.colorType)))
+                {
+                    return product[i].price;
+                }
+            }
+            return 0;
+        }
+        //this function used for the single price from the array of product for the particular product
+        static void singlePricePerProduct(ElectronicsItem[] product, customeritem[] PurchaseProduct)
+        {
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                PurchaseProduct[i].singlePrice = getProductPrice(product, PurchaseProduct[i]);
+            }
+        }
+        //this function used for discountedprice 
+        static void finalDisountedPrice(customeritem[] PurchaseProduct)
+        {
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                PurchaseProduct[i].discountedPrice = PurchaseProduct[i].totalPrice * (1 - PurchaseProduct[i].discount / 100);   //discountedprice=(price*quantity)*(1-disount/100)
+            }
+        }
+        static void decideProductPrice(ElectronicsItem[] product, customeritem[] PurchaseProduct)
+        {
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                PurchaseProduct[i].totalPrice =  getProductPrice(product, PurchaseProduct[i]) * PurchaseProduct[i].quantity; //totalprice=product*quantity
+            }
+        }//if the user take more then 1 product 
+        static double findTotalPriceOfPurchaseItem(customeritem[] PurchaseProduct)
+        {
+            double totalPriceForPrint = 0;
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                totalPriceForPrint = PurchaseProduct[i].totalPrice + totalPriceForPrint; //totalprice=product total price + previous total price 
+            }
+            return totalPriceForPrint;
+        }
+        static double findTotalDiscountedPrice(customeritem[] PurchaseProduct)
+        {
+            double totalDiscountedPriceForPrint = 0;
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                totalDiscountedPriceForPrint = PurchaseProduct[i].discountedPrice + totalDiscountedPriceForPrint; //totaldiscountedprice=product discount price + previous total price
+            }
+            return totalDiscountedPriceForPrint;
+        }
+        //check if the user input same item product again
+        static int checkIfSameEntryExists(customeritem[] PurchaseProduct, string name, string subType, string colortype)
+        {
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                if ((isStringEqual(PurchaseProduct[i].name, name)) && (isStringEqual(PurchaseProduct[i].subType, subType)) && (isStringEqual(PurchaseProduct[i].colorType, colortype)) )
+                {
+                    return i;
+                } 
+            }
+            return -1;
+        }
+        //check if the user input same product again
+        static int checkIfSameProductExists(customeritem[] PurchaseProduct, string name)
+        {
+
+            for (int i = 0; i < PurchaseProduct.Length; i++)
+            {
+                if (isStringEqual(PurchaseProduct[i].name, name)) 
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        static void Main(string[] args)
+        {
+            Welcome();
+            AvailableProduct();
+          
+            ElectronicsItem[] product = new ElectronicsItem[24];
+            customeritem[] PurchaseProduct = new customeritem[240];
+
+            //save the product name,subtypes, colors and prices
+            string[] productlist = new string[]
+            {
+                "Phone",     "Phone",     "Phone",     "Phone",    
+                "Tablet",    "Tablet",    "Tablet",    "Tablet",   
+                "Speaker",   "Speaker",   "Speaker",   "Speaker",  
+                "Tv",        "Tv",        "Tv",        "Tv",       
+                "Headphone", "Headphone", "Headphone", "Headphone",
+                "Bluetooth", "Bluetooth", "Bluetooth", "Bluetooth"
+            };
+            string[] subTypelist = new string[]
+            {
+                "iPhone",     "iPhone",     "pixel",      "pixel",
+                "samsung",    "samsung",    "iPad",       "iPad",
+                "Boss",       "Boss",       "samsung",    "samsung",
+                "Toshiba",    "Toshiba",    "Appletv",    "Appletv",
+                "Skullcandy", "Skullcandy", "Beats",      "Beats",
+                "Airpord",    "Airpord",    "Skullcandy", "Skullcandy"
+            };
+            string[] colortypelist = new string[]
+            {
+                "grey",  "red",   "white",   "black",
+                "grey",  "red",   "white",   "black",
+                "grey",  "red",   "white",   "black",
+                "grey",  "red",   "white",   "black",
+                "grey",  "red",   "white",   "black",
+                "grey",  "red",   "white",   "black"
+            };
+            string[] pricelist = new string[]
+            {
+                "1599",     "1549",    "799",     "749",
+                "1099",     "1049",    "1199",    "1149",
+                "249",      "255",     "340",     "370",
+                "2240",     "2340",    "2780",    "2710",
+                "80",       "85",      "170",     "190",
+                "350",      "310",     "250",     "270"
+            };
+
+            
+            for (int i = 0; i < 24; i++)
+            {
+                product[i].name = productlist[i];
+                product[i].subType = subTypelist[i];
+                product[i].colorType = colortypelist[i];
+                product[i].price = double.Parse(pricelist[i]);
+            } 
+            
+            Boolean  checkout = false;
+            int productNumber = 0; 
+            string name, subType, colorType;
+            do
+            {
+               
+                name = AskProductType(product);
+                subType = AskSubType(product, name);
+                colorType = AskcolorType(product, name, subType);
+
+
+                int tempIndex = checkIfSameEntryExists(PurchaseProduct, name, subType, colorType);
+                int sameProductIndex = checkIfSameProductExists(PurchaseProduct, name);
+                if (sameProductIndex != -1)
+                {
+                    if (tempIndex != -1)
+                    {
+                        PurchaseProduct[tempIndex].quantity = askQuantity(PurchaseProduct[tempIndex].quantity, PurchaseProduct[tempIndex].colorType, PurchaseProduct[tempIndex].subType, PurchaseProduct[tempIndex].name);
+                        PurchaseProduct[tempIndex].discount = disItem(PurchaseProduct[tempIndex].quantity);
+                    }
+                    else
+                    {
+                        //if the user order same product again then the first order will be replaced by the second order
+                        string previousProduct = PurchaseProduct[sameProductIndex].name + " " + PurchaseProduct[sameProductIndex].subType + " " + PurchaseProduct[sameProductIndex].colorType;
+                        string newProduct = name + " " + subType + " " + colorType;
+                        Console.WriteLine("\n=> Your item " + previousProduct + " is being replaced by " + newProduct + " , because you can only order one type of item !");
+                        PurchaseProduct[sameProductIndex].name = name;
+                        PurchaseProduct[sameProductIndex].subType = subType;
+                        PurchaseProduct[sameProductIndex].colorType = colorType;
+                        PurchaseProduct[sameProductIndex].quantity = askQuantity(0, PurchaseProduct[sameProductIndex].colorType, PurchaseProduct[sameProductIndex].subType, PurchaseProduct[sameProductIndex].name);
+                        PurchaseProduct[sameProductIndex].discount = disItem(PurchaseProduct[sameProductIndex].quantity); 
+                    }
+                }           
+                else
+                {
+                    PurchaseProduct[productNumber].name = name;
+                    PurchaseProduct[productNumber].subType = subType;
+                    PurchaseProduct[productNumber].colorType = colorType;
+                    PurchaseProduct[productNumber].quantity = askQuantity(0, PurchaseProduct[productNumber].colorType, PurchaseProduct[productNumber].subType, PurchaseProduct[productNumber].name);
+                    PurchaseProduct[productNumber].discount = disItem(PurchaseProduct[productNumber].quantity);
+                    productNumber++;
+                }
+                checkout = isCheckoutSelected();
+
+            } while (checkout == false);
+
+
+            decideProductPrice(product, PurchaseProduct);
+            singlePricePerProduct(product, PurchaseProduct);
+            finalDisountedPrice(PurchaseProduct);
+
+            //show user to printed bill
+            Console.WriteLine("\n");
+            Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15}", "Item type", "Details", "Cost per", "Qty", "Discount", "Total");
+            Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15}", "---------", "-------", "--------", "---", "--------", "-----");
+            
+            for (int i = 0; i < productNumber; i++)
+            {
+                Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15:$0.00}", PurchaseProduct[i].name, PurchaseProduct[i].colorType +","+ PurchaseProduct[i].subType, PurchaseProduct[i].singlePrice, PurchaseProduct[i].quantity, PurchaseProduct[i].discount, PurchaseProduct[i].discountedPrice);          
+
+            }
+            //here declare new variable for store the data from the different function
+            double totalSaving, taxPrice, total;
+            double totalPriceForPrint, totalDiscountedPriceForPrint;
+
+            totalPriceForPrint           = findTotalPriceOfPurchaseItem(PurchaseProduct);
+            totalDiscountedPriceForPrint = findTotalDiscountedPrice(PurchaseProduct);
+            totalSaving  = totalPriceForPrint - totalDiscountedPriceForPrint;
+            taxPrice     = totalDiscountedPriceForPrint * 0.13;
+            total        = totalDiscountedPriceForPrint + taxPrice;
+
+            Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15:$0.00}", "", "", "", "", "Total savings:", totalSaving);
+            Console.WriteLine("\n{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15:$0.00}", "", "", "", "", "Sub Total:", totalDiscountedPriceForPrint);
+            Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15:$0.00}", "", "", "", "", "Tax:", taxPrice);
+            Console.WriteLine("{0,-15}{1,-15}{2,15}{3,15}{4,15}{5,15:$0.00}", "", "", "", "", "Total", total);
+            Console.WriteLine("\n\n=> Thank you for your purchase!!");
+            Console.WriteLine("\n=> Have a Good Day");
+        }
+    }
+}
